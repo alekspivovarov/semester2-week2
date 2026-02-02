@@ -5,19 +5,33 @@ import sqlite3
 # ==================================================
 
 def total_customers(conn):
-    pass
+    cursor = conn.execute("SELECT COUNT(*) FROM customers;")
+    result= cursor.fetchone()
+    print(f"Total customers: {result[0]}")
 
 
 def customer_signup_range(conn):
-    pass
+    cursor = conn.execute("SELECT MIN(signup_date), MAX(signup_date) FROM customers;")
+    result = cursor.fetchnone()
+    print(f"Earliest signup: {result[0]}\nLatest signup: {result[1]}")
 
 
 def order_summary_stats(conn):
-    pass
+    cursor = conn.execute("""SELECT COUNT(*), AVG(order_total), MAX(order_total), MIN(order_total) FROM orders;""")
+    result = cursor.fetchnone()
+    print(f"Total orders: {result[0]}")
+    print(f"Average order value: £{result[1]:.2f}")
+    print(f"Highest order value: £{result[2]:.2f}")
+    print(f"Lowest order value: £{result[3]:.2f}")
 
 
 def driver_summary(conn):
-    pass
+    cursor = conn.execute("SELECT driver_name, hire_date FROM drivers;")
+    count = 0
+    for driver in cursor:
+        print(f"Driver: {driver[0]}\tHire date: {driver[1]}")
+        count += 1
+    print(f"\nTotal drivers: {count}")
 
 
 # ==================================================
@@ -25,7 +39,14 @@ def driver_summary(conn):
 # ==================================================
 
 def orders_per_customer(conn):
-    pass
+    cursor = conn.execute("""
+        SELECT c.customer_name, COUNT(o.order_id), SUM(o.order_total)
+        FROM customers c
+        LEFT JOIN orders o ON c.custoemr_id = o.customer_id
+        GROUP BY c.customer_id, c.customer_name;
+    """)
+    for row in cursor:
+        print(f"Customer: {row[0]}\tOrders: {row[1]}\Total spent:" £{row[2] or 0:.2f} )
 
 
 def driver_workload(conn):

@@ -47,6 +47,10 @@ def search_for_student(db):
                 ON s.department_id=d.id
                 WHERE s.name=?
                 '''
+        cursor = db.execute(query)
+
+        for course in coursor:
+            print(f"Course: {course[0]}\tStudents: {course[1]}")
         
     # first we run the query, providing a tuple of any ? values.
     cursor = db.execute(query, (choice,))
